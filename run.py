@@ -1,3 +1,5 @@
+from datetime import datetime
+import os
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -16,7 +18,3 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('Bjj-Manager')
 
 
-members = SHEET.worksheet('sheet1')
-
-data = members.get_all_values()
-print(data)
