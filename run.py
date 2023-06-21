@@ -19,6 +19,7 @@ SHEET = GSPREAD_CLIENT.open('Bjj-Manager')
 
 
 def welcome():
+    clear()
     while True:
         print("==== BJJ Manager ====")
         print("1. Add participant")
@@ -83,6 +84,37 @@ def clear():
     Clear screen during game
     """
     os.system("clear")
+
+
+# Function to add a participant to the list and spreadsheet
+def add_participant(name, group, payment_confirmed):
+    current_month = datetime.now().strftime("%B-%Y")
+    
+    # Check if the spreadsheet for the current month already exists
+    spreadsheet = GSPREAD_CLIENT.open('Bjj-Manager')
+    
+    # Check if the worksheet for the current month already exists
+    worksheet_title = current_month
+    worksheets = spreadsheet.worksheets()
+    worksheet = None
+
+    for sheet in worksheets:
+        if sheet.title == worksheet_title:
+            worksheet = sheet
+            break
+
+    if worksheet is None:
+        worksheet = spreadsheet.add_worksheet(title=worksheet_title, rows="100", cols="3")
+    
+    # Check if the participant limit has been exceeded
+    if len(worksheet.get_all_values()) > 20:
+        print("Participant limit exceeded!")
+        return
+    
+    # Add the participant to the list
+    participant_info = [name, group, payment_confirmed]
+    worksheet.append_row(participant_info)
+    print("Participant added!")
 
 
 def main():
