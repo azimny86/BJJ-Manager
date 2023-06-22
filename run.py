@@ -15,7 +15,7 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 
 # Spread sheet name
-SHEET = GSPREAD_CLIENT.open('Bjj-Manager')
+SHEET = 'Bjj-Manager'
 
 
 def welcome():
@@ -32,8 +32,8 @@ def welcome():
 
         if choice == "1":
             name = input("Enter participant's name: ")
-            group = input("Enter participant's group (Beginner/Advanced): ")
-            payment_confirmed = input("Has the payment been confirmed? (Yes/No): ").lower() == "yes"
+            group = input("Enter participant's group (B:Beginner/A:Advanced): ")
+            payment_confirmed = input("Has the payment been confirmed? (Y/N): ").lower() == "y"
             add_participant(name, group, payment_confirmed)
         elif choice == "2":
             name = input("Enter participant's name to remove: ")
@@ -46,6 +46,7 @@ def welcome():
         elif choice == "q":
             exit()
         else:
+            print("\n")
             print("Invalid option.")
 
     print("Thank you for using BJJ Manager!")
@@ -76,7 +77,7 @@ def about():
             return welcome()
         else:
             print("\n")
-            print('If you want to leave the rules you have to press "E"')
+            print('If you want to leave the about you have to press "E"')
 
 
 def clear():
@@ -89,14 +90,14 @@ def clear():
 # Function to add a participant to the list and spreadsheet
 def add_participant(name, group, payment_confirmed):
     current_month = datetime.now().strftime("%B-%Y")
-    
-    # Check if the spreadsheet for the current month already exists
-    spreadsheet = GSPREAD_CLIENT.open('Bjj-Manager')
-    
+
+    # Open the spreadsheet
+    spreadsheet = GSPREAD_CLIENT.open(SHEET)
+
     # Check if the worksheet for the current month already exists
     worksheet_title = current_month
-    worksheets = spreadsheet.worksheets()
     worksheet = None
+    worksheets = spreadsheet.worksheets()
 
     for sheet in worksheets:
         if sheet.title == worksheet_title:
@@ -105,16 +106,37 @@ def add_participant(name, group, payment_confirmed):
 
     if worksheet is None:
         worksheet = spreadsheet.add_worksheet(title=worksheet_title, rows="100", cols="3")
-    
+        worksheet.update("A1:C1", [["Name", "Group", "Payment Confirmed"]])
+
     # Check if the participant limit has been exceeded
     if len(worksheet.get_all_values()) > 20:
         print("Participant limit exceeded!")
         return
+
     
     # Add the participant to the list
     participant_info = [name, group, payment_confirmed]
     worksheet.append_row(participant_info)
     print("Participant added!")
+
+    # Set column width
+    column_widths = [
+        {
+            "updateDimensionProperties": {
+                "range": {
+                    "sheetId": worksheet.id,
+                    "dimension": "COLUMNS",
+                    "startIndex": 0,
+                    "endIndex": 1
+                },
+                "properties": {
+                    "pixelSize": 20
+                },
+                "fields": "pixelSize"
+            }
+        }
+    ]
+    spreadsheet.batch_update({"requests": column_widths})
 
 
 def main():
