@@ -149,6 +149,32 @@ def add_participant(name, group, payment_confirmed_input):
     spreadsheet.batch_update({"requests": column_widths})
 
 
+# Function to remove a participant from the list
+def remove_participant(name):
+    current_month = datetime.now().strftime("%B-%Y")
+
+    # Check if the worksheet for the current month already exists
+    worksheet_title = current_month
+    worksheets = GSPREAD_CLIENT.open('Bjj-Manager').worksheets()
+    worksheet = None
+
+    for sheet in worksheets:
+        if sheet.title == worksheet_title:
+            worksheet = sheet
+            break
+
+    if worksheet is not None:
+        # Find the participant in the worksheet
+        participants = worksheet.get_all_records()
+        for participant in participants:
+            if participant['Name'].lower() == name.lower():
+                worksheet.delete_row(participants.index(participant) + 2)  # +2 because indexes are shifted by the header and 0-based indexing
+                print("Participant removed!")
+                return
+
+    print("Participant with the given name not found.")
+
+
 def main():
     welcome()
 
