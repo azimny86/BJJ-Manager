@@ -90,10 +90,10 @@ def clear():
 # Function to add a participant to the list and spreadsheet
 def add_participant(name, group, payment_confirmed_input):
     current_month = datetime.now().strftime("%B-%Y")
-    
+
     # Check if the spreadsheet for the current month already exists
     spreadsheet = GSPREAD_CLIENT.open('Bjj-Manager')
-    
+
     # Check if the worksheet for the current month already exists
     worksheet_title = current_month
     worksheets = spreadsheet.worksheets()
@@ -105,16 +105,36 @@ def add_participant(name, group, payment_confirmed_input):
             break
 
     if worksheet is None:
+        # Create a new worksheet for the current month
         worksheet = spreadsheet.add_worksheet(title=worksheet_title, rows="100", cols="3")
-    
+
+        # Set column headers
+        headers = ["Name", "Group", "Payment Confirmed"]
+        worksheet.append_row(headers)
+
+        # Set column width
+        column_widths = [
+            {
+                "updateDimensionProperties": {
+                    "range": {
+                        "sheetId": worksheet.id,
+                        "dimension": "COLUMNS",
+                        "startIndex": 0,
+                        "endIndex": 1
+                    },
+                    "properties": {
+                        "pixelSize": 20
+                    },
+                    "fields": "pixelSize"
+                }
+            }
+        ]
+        spreadsheet.batch_update({"requests": column_widths})
+
     # Check if the participant limit has been exceeded
     if len(worksheet.get_all_values()) > 20:
         print("Participant limit exceeded!")
         return
-
-    # Set values for column headers
-    headers = ["Name", "Group", "Payment Confirmed"]
-    worksheet.append_row(headers)
 
     # Map user input for group
     group_mapping = {"a": "Advanced", "b": "Beginner"}
@@ -122,31 +142,13 @@ def add_participant(name, group, payment_confirmed_input):
 
     # Map user input for payment confirmation
     payment_confirmation_mapping = {True: "Yes", False: "No"}
-    payment_confirmed = payment_confirmation_mapping.get(payment_confirmed_input, "")
+    payment_confirmed = payment_confirmation_mapping.get(
+        payment_confirmed_input, "")
 
     # Add the participant to the list
     participant_info = [name, group, payment_confirmed]
     worksheet.append_row(participant_info)
     print("Participant added!")
-
-    # Set column width
-    column_widths = [
-        {
-            "updateDimensionProperties": {
-                "range": {
-                    "sheetId": worksheet.id,
-                    "dimension": "COLUMNS",
-                    "startIndex": 0,
-                    "endIndex": 1
-                },
-                "properties": {
-                    "pixelSize": 20
-                },
-                "fields": "pixelSize"
-            }
-        }
-    ]
-    spreadsheet.batch_update({"requests": column_widths})
 
 
 # Function to remove a participant from the list
