@@ -88,16 +88,16 @@ def clear():
 
 
 # Function to add a participant to the list and spreadsheet
-def add_participant(name, group, payment_confirmed):
+def add_participant(name, group, payment_confirmed_input):
     current_month = datetime.now().strftime("%B-%Y")
-
-    # Open the spreadsheet
-    spreadsheet = GSPREAD_CLIENT.open(SHEET)
-
+    
+    # Check if the spreadsheet for the current month already exists
+    spreadsheet = GSPREAD_CLIENT.open('Bjj-Manager')
+    
     # Check if the worksheet for the current month already exists
     worksheet_title = current_month
-    worksheet = None
     worksheets = spreadsheet.worksheets()
+    worksheet = None
 
     for sheet in worksheets:
         if sheet.title == worksheet_title:
@@ -106,14 +106,24 @@ def add_participant(name, group, payment_confirmed):
 
     if worksheet is None:
         worksheet = spreadsheet.add_worksheet(title=worksheet_title, rows="100", cols="3")
-        worksheet.update("A1:C1", [["Name", "Group", "Payment Confirmed"]])
-
+    
     # Check if the participant limit has been exceeded
     if len(worksheet.get_all_values()) > 20:
         print("Participant limit exceeded!")
         return
 
-    
+    # Set values for column headers
+    headers = ["Name", "Group", "Payment Confirmed"]
+    worksheet.append_row(headers)
+
+    # Map user input for group
+    group_mapping = {"a": "Advanced", "b": "Beginner"}
+    group = group_mapping.get(group.lower(), "")
+
+    # Map user input for payment confirmation
+    payment_confirmation_mapping = {True: "Yes", False: "No"}
+    payment_confirmed = payment_confirmation_mapping.get(payment_confirmed_input, "")
+
     # Add the participant to the list
     participant_info = [name, group, payment_confirmed]
     worksheet.append_row(participant_info)
