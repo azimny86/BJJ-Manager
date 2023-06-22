@@ -177,6 +177,39 @@ def remove_participant(name):
     print("Participant with the given name not found.")
 
 
+# Function to confirm participant's payment
+def confirm_payment(name):
+    current_month = datetime.now().strftime("%B-%Y")
+    spreadsheet = GSPREAD_CLIENT.open('Bjj-Manager')
+
+    # Check if the worksheet for the current month already exists
+    worksheet_title = current_month
+    worksheets = spreadsheet.worksheets()
+    worksheet = None
+
+    for sheet in worksheets:
+        if sheet.title == worksheet_title:
+            worksheet = sheet
+            break
+
+    if worksheet is not None:
+        # Find the participant in the worksheet
+        participants = worksheet.get_all_records()
+        for participant in participants:
+            if participant['Name'] == name:
+                participant['Payment Confirmed'] = True
+                index = participants.index(participant) + 2  # +2 because indexes are shifted by the header and 0-based indexing
+                cell = worksheet.cell(index, 3)  # 3 - index of the "Payment Confirmed" column
+                cell.value = "Yes"
+                worksheet.update_cell(cell.row, cell.col, cell.value)
+                print("Participant's payment confirmed!")
+                return
+
+        print("Participant with the given name not found.")
+    else:
+        print("Worksheet for the current month doesn't exist. Please add participants first.")
+
+
 def main():
     welcome()
 
