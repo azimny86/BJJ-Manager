@@ -158,15 +158,13 @@ def add_participant(name, group, payment_confirmed_input):
     group_mapping = {"a": "Advanced", "b": "Beginner"}
     group = group_mapping.get(group.lower(), "")
 
-    # Map user input for payment confirmation
-    payment_confirmation_mapping = {True: "Yes", False: "No"}
-    payment_confirmed = payment_confirmation_mapping.get(
-        payment_confirmed_input, "")
+    # Convert boolean input to string
+    payment_confirmed = "Yes" if payment_confirmed_input else "No"
 
     # Add the participant to the list
     participant_info = [name, group, payment_confirmed]
     worksheet.append_row(participant_info)
-    print("Participant added!")
+    print("\nParticipant added!\n")
 
 
 # Function to remove a participant from the list
@@ -259,7 +257,7 @@ def display_members():
                 name = participant['Name']
                 group = participant['Group']
                 payment_confirmed = participant['Payment Confirmed']
-                payment_status = "Paid" if payment_confirmed else "Not Paid"
+                payment_status = "Paid" if payment_confirmed.lower() == "yes" else "Not Paid"
                 print(
                     f"Name: {name}\nGroup: {group}\nPayment Status: \
                          {payment_status}\n")
