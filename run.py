@@ -60,17 +60,29 @@ def welcome():
 def about():
     clear()
     print("Welcome to BJJ Manager!")
-    print("BJJ Manager is a powerful tool designed to manage your membrships in BJJ gym.")
-    print("With this program, you can easily manage participant membership, enforce class limits, and keep track of payments.")
+    print("BJJ Manager is a powerful tool designed to manage your \
+        membrships in BJJ gym.")
+    print("With this program, you can easily manage participant membership, \
+        enforce class limits, and keep track of payments.")
     print("Here are some key features:")
-    print("- Recording a members: Reserve your spot in BJJ training sessions by selecting the desired group (Beginner or Advanced).")
-    print("- Class Limit: Each training session has a maximum capacity of 20 participants. If the limit is exceeded, you will be notified.")
-    print("- Google Sheets Integration: The participant list will be automatically uploaded to a Google Sheets document for easy access and management.")
-    print("- Payment Confirmation: To book a session, you must confirm your monthly payment. Only participants with confirmed payments can reserve a spot.")
-    print("- Monthly Tracking: A new spreadsheet will be created for each month to keep your records organized.")
-    print("- Removal of Participants: If needed, you can remove yourself from a booked session.")
-    print("Enjoy the convenience and efficiency of BJJ Manager for managing your BJJ training sessions.")
-    print("If you have any questions or need assistance, please don't hesitate to reach out to our support team.")
+    print("- Recording a members: Reserve your spot in BJJ training sessions \
+        by selecting the desired group (Beginner or Advanced).")
+    print("- Class Limit: Each training session has a maximum capacity of \
+        20 participants. If the limit is exceeded, you will be notified.")
+    print("- Google Sheets Integration: The participant list will be \
+        automatically uploaded to a Google Sheets document for\
+             easy access and management.")
+    print("- Payment Confirmation: To book a session, you must confirm your \
+        monthly payment. Only participants with confirmed payments can\
+             reserve a spot.")
+    print("- Monthly Tracking: A new spreadsheet will be created for\
+         each month to keep your records organized.")
+    print("- Removal of Participants: If needed,\
+         you can remove yourself from a booked session.")
+    print("Enjoy the convenience and efficiency of\
+         BJJ Manager for managing your BJJ training sessions.")
+    print("If you have any questions or need assistance, \
+         please don't hesitate to reach out to our support team.")
     print("==============================================")
     print("Press " + "E" + " to go back to the start menu")
     opt = False
@@ -216,7 +228,8 @@ def confirm_payment(name):
 
         print("Participant with the given name not found.")
     else:
-        print("Worksheet for the current month doesn't exist. Please add participants first.")
+        print("Worksheet for the current month doesn't exist. \
+             Please add participants first.")
 
 
 # Function to display members for the current month
@@ -247,9 +260,12 @@ def display_members():
                 group = participant['Group']
                 payment_confirmed = participant['Payment Confirmed']
                 payment_status = "Paid" if payment_confirmed else "Not Paid"
-                print(f"Name: {name}\nGroup: {group}\nPayment Status: {payment_status}\n")
+                print(
+                    f"Name: {name}\nGroup: {group}\nPayment Status: \
+                         {payment_status}\n")
     else:
-        print("Worksheet for the current month doesn't exist. Please add participants first.")
+        print("Worksheet for the current month doesn't exist. Please add \
+            participants first.")
 
 
 def main():
