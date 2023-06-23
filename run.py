@@ -33,8 +33,10 @@ def welcome():
 
         if choice == "1":
             name = input("Enter participant's name: ")
-            group = input("Enter participant's group (B:Beginner/A:Advanced): ")
-            payment_confirmed = input("Has the payment been confirmed? (Y/N): ").lower() == "y"
+            group = input(
+                "Enter participant's group (B:Beginner/A:Advanced): ")
+            payment_confirmed = input(
+                "Has the payment been confirmed? (Y/N): ").lower() == "y"
             add_participant(name, group, payment_confirmed)
         elif choice == "2":
             name = input("Enter participant's name to remove: ")
@@ -59,7 +61,7 @@ def about():
     clear()
     print("Welcome to BJJ Manager!")
     print("BJJ Manager is a powerful tool designed to manage your membrships in BJJ gym.")
-    print("With this program, you can easily manage participant bookings, enforce class limits, and keep track of payments.")
+    print("With this program, you can easily manage participant membership, enforce class limits, and keep track of payments.")
     print("Here are some key features:")
     print("- Recording a members: Reserve your spot in BJJ training sessions by selecting the desired group (Beginner or Advanced).")
     print("- Class Limit: Each training session has a maximum capacity of 20 participants. If the limit is exceeded, you will be notified.")
@@ -109,7 +111,8 @@ def add_participant(name, group, payment_confirmed_input):
 
     if worksheet is None:
         # Create a new worksheet for the current month
-        worksheet = spreadsheet.add_worksheet(title=worksheet_title, rows="100", cols="3")
+        worksheet = spreadsheet.add_worksheet(
+            title=worksheet_title, rows="100", cols="3")
 
         # Set column headers
         headers = ["Name", "Group", "Payment Confirmed"]
@@ -173,7 +176,8 @@ def remove_participant(name):
         participants = worksheet.get_all_records()
         for participant in participants:
             if participant['Name'].lower() == name.lower():
-                worksheet.delete_row(participants.index(participant) + 2)  # +2 because indexes are shifted by the header and 0-based indexing
+                # +2 because indexes are shifted by the header and 0- indexing
+                worksheet.delete_row(participants.index(participant) + 2)
                 print("Participant removed!")
                 return
 
@@ -201,8 +205,10 @@ def confirm_payment(name):
         for participant in participants:
             if participant['Name'] == name:
                 participant['Payment Confirmed'] = True
-                index = participants.index(participant) + 2  # +2 because indexes are shifted by the header and 0-based indexing
-                cell = worksheet.cell(index, 3)  # 3 - index of the "Payment Confirmed" column
+            # +2 because indexes are shifted by the header and 0-based indexing
+                index = participants.index(participant) + 2
+            # 3 - index of the "Payment Confirmed" column
+                cell = worksheet.cell(index, 3)
                 cell.value = "Yes"
                 worksheet.update_cell(cell.row, cell.col, cell.value)
                 print("Participant's payment confirmed!")
@@ -244,7 +250,6 @@ def display_members():
                 print(f"Name: {name}\nGroup: {group}\nPayment Status: {payment_status}\n")
     else:
         print("Worksheet for the current month doesn't exist. Please add participants first.")
-
 
 
 def main():
