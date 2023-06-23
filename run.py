@@ -29,20 +29,20 @@ def welcome():
         print("9. About program")
         print("Q. Exit the program")
         print("=====================")
-        choice = input("Choose an option: ")
+        choice = input("Choose an option:\n ")
 
         if choice == "1":
-            name = input("Enter participant's name: ")
+            name = input("Enter participant's name:\n ")
             group = input(
-                "Enter participant's group (B:Beginner/A:Advanced): ")
+                "Enter participant's group (B:Beginner/A:Advanced):\n ")
             payment_confirmed = input(
-                "Has the payment been confirmed? (Y/N): ").lower() == "y"
+                "Has the payment been confirmed? (Y/N):\n ").lower() == "y"
             add_participant(name, group, payment_confirmed)
         elif choice == "2":
-            name = input("Enter participant's name to remove: ")
+            name = input("Enter participant's name to remove:\n ")
             remove_participant(name)
         elif choice == "3":
-            name = input("Enter participant's name to confirm payment: ")
+            name = input("Enter participant's name to confirm payment:\n ")
             confirm_payment(name)
         elif choice == "4":
             display_members()
