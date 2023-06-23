@@ -25,6 +25,7 @@ def welcome():
         print("1. Add participant")
         print("2. Remove participant")
         print("3. Confirm payment")
+        print("4. Display members for this month")
         print("9. About program")
         print("Q. Exit the program")
         print("=====================")
@@ -41,6 +42,8 @@ def welcome():
         elif choice == "3":
             name = input("Enter participant's name to confirm payment: ")
             confirm_payment(name)
+        elif choice == "4":
+            display_members()
         elif choice == "9":
             about()
         elif choice == "q":
@@ -208,6 +211,40 @@ def confirm_payment(name):
         print("Participant with the given name not found.")
     else:
         print("Worksheet for the current month doesn't exist. Please add participants first.")
+
+
+# Function to display members for the current month
+def display_members():
+    current_month = datetime.now().strftime("%B-%Y")
+    spreadsheet = GSPREAD_CLIENT.open('Bjj-Manager')
+
+    # Check if the worksheet for the current month already exists
+    worksheet_title = current_month
+    worksheets = spreadsheet.worksheets()
+    worksheet = None
+
+    for sheet in worksheets:
+        if sheet.title == worksheet_title:
+            worksheet = sheet
+            break
+
+    if worksheet is not None:
+        # Get all participants' information
+        participants = worksheet.get_all_records()
+
+        if not participants:
+            print("No participants found for the current month.")
+        else:
+            print(f"Members for {current_month}:\n")
+            for participant in participants:
+                name = participant['Name']
+                group = participant['Group']
+                payment_confirmed = participant['Payment Confirmed']
+                payment_status = "Paid" if payment_confirmed else "Not Paid"
+                print(f"Name: {name}\nGroup: {group}\nPayment Status: {payment_status}\n")
+    else:
+        print("Worksheet for the current month doesn't exist. Please add participants first.")
+
 
 
 def main():
