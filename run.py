@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 import gspread
+import sys
 from google.oauth2.service_account import Credentials
 
 # Configuration of access to Google Sheets
@@ -49,7 +50,7 @@ def welcome():
         elif choice == "9":
             about()
         elif choice == "q":
-            exit()
+            sys.exit(0)
         else:
             print("\n")
             print("Invalid option.")
